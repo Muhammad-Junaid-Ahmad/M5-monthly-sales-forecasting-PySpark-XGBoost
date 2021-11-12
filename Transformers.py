@@ -81,63 +81,6 @@ class GroupByTransformer(Transformer):
 
         return df
 
-
-"""
-Transformer to append a new feature named 'is_weekend' given a wday column as input.
-"""
-
-
-class IsWeekEnd(Transformer, HasInputCol, HasOutputCol):
-
-    @keyword_only
-    def __init__(self, inputCol=None, outputCol='is_weekend'):
-        super(IsWeekEnd, self).__init__()
-        self._setDefault(inputCol=None, outputCol='is_weekend')
-        kwargs = self._input_kwargs
-        self.set_params(**kwargs)
-
-    @keyword_only
-    def set_params(self, inputCol=None, outputCol=None):
-        kwargs = self._input_kwargs
-        self._set(**kwargs)
-
-    def get_input_col(self):
-        return self.getOrDefault(self.inputCol)
-
-    def get_output_col(self):
-        return self.getOrDefault(self.outputCol)
-
-    def _transform(self, df: DataFrame):
-        inputCol = self.get_input_col()
-        outputCol = self.get_output_col()
-        return df.withColumn(outputCol, (df[inputCol] <= 2).cast(IntegerType()))
-
-
-"""
-Transformer For Extracting day of the month from the date column
-"""
-
-
-class MonthDayExtractor(Transformer, HasInputCol, HasOutputCol):
-
-    @keyword_only
-    def __init__(self, inputCol=None, outputCol='mday'):
-        super(MonthDayExtractor, self).__init__()
-        self._setDefault(inputCol=None, outputCol='mday')
-        kwargs = self._input_kwargs
-        self.set_params(**kwargs)
-
-    @keyword_only
-    def set_params(self, inputCol=None, outputCol=None):
-        kwargs = self._input_kwargs
-        self._set(**kwargs)
-
-    def _transform(self, df: DataFrame):
-        inputCol = self.getInputCol()
-        outputCol = self.getOutputCol()
-        return df.withColumn(outputCol, F.split(inputCol, '-').getItem(2).cast(IntegerType()))
-
-
 """
 Transofrmer for computing Lag features based on the inputCol and lag value.
 """
