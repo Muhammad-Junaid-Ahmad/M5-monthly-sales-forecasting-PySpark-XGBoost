@@ -165,7 +165,8 @@ class XGBoostEstimator(Estimator, HasLabelCol, HasFeaturesCol, HasPredictionCol,
         if(trainDF.select(featuresCol).dtypes[0][1] == "vector"):
             trainDF = trainDF.withColumn(featuresCol, getDeVectorizedColumn(featuresCol))
 
-        trainDF = trainDF.toPandas()
+        trainDF = trainDF.select([featuresCol, labelCol]).toPandas()
+        valDF = valDF.select([featuresCol, labelCol]).cache()
             
         print("Tunning hyper-parameters")
         trials = Trials()
@@ -173,6 +174,7 @@ class XGBoostEstimator(Estimator, HasLabelCol, HasFeaturesCol, HasPredictionCol,
                     space=hyperParamsSpace, algo=tpe.suggest, max_evals=maxIter, trials=trials)
         
         print("bestParams: ", bestParams)
+        valDF.unpersist()
 
         return self.getTrainedModel(trials.best_trial["result"]["params"], trainDF)
         
