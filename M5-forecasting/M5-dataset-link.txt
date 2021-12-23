@@ -1,2 +1,0 @@
-Get Data Set from following link:
-https://www.kaggle.com/c/m5-forecasting-accuracy/data
