@@ -1,0 +1,8 @@
+pyspark[sql]
+pytest
+xgboost
+fbprophet
+plotly
+hyperopt
+cloudpickle
+networkx
